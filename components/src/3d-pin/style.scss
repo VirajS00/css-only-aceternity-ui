@@ -4,6 +4,54 @@ body {
     place-items: center;
 }
 
+.card-container {
+    perspective: 1000px;
+
+    .pin {
+        position: absolute;
+        height: 200px;
+        width: 2px;
+        background-image: linear-gradient(transparent, #87e5ff);
+        z-index: 1;
+        left: 50%;
+        transform: translate(-50%, -8px) scale(0);
+        transition: transform 400ms ease-in-out;
+        transition-delay: 300ms;
+        transform-origin: bottom;
+
+        .label {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            text-align: center;
+            z-index: 1;
+
+            span {
+                display: block;
+                background-color: #000;
+                border-radius: 100vw;
+                padding: 0.5rem 1.2rem;
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: -2px;
+                border-radius: 100vw;
+                background-image: radial-gradient(#45c8ec 40%, transparent);
+                z-index: -1;
+            }
+        }
+    }
+
+    &:hover {
+        .pin {
+            transform: translate(-50%, -8px) scale(1);
+        }
+    }
+}
+
 .card {
     border: 1px solid #333;
     aspect-ratio: 1;
@@ -11,11 +59,25 @@ body {
     border-radius: 1rem;
     padding: 1rem;
     cursor: pointer;
-    transform: perspective(1000px) rotateX(0deg);
-    transition: transform 250ms ease;
+    transform: rotateX(0deg);
+    transition: transform 500ms ease;
 
     &:hover {
-        transform: perspective(1000px) rotateX(45deg);
+        transform: rotateX(50deg);
+
+        .gradient .circle,
+        .gradient .circle::before,
+        .gradient .circle::after {
+            opacity: 1;
+        }
+
+        .gradient .circle::before {
+            animation: circlesSmall 2s ease-in-out infinite;
+        }
+
+        .gradient .circle::after {
+            animation: circlesBig 4s ease-in-out infinite;
+        }
     }
 
     .gradient {
@@ -23,6 +85,49 @@ body {
         width: 100%;
         border-radius: 0.5rem;
         background-image: linear-gradient(-45deg, rgb(132, 161, 255), rgb(212, 3, 227));
+        display: flex;
+        justify-content: center;
+        position: relative;
+
+        .circle {
+            position: absolute;
+            height: 4px;
+            width: 4px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #87e5ff;
+            opacity: 0;
+            transition: opacity 250ms ease;
+
+            &::before {
+                content: "";
+                position: absolute;
+                border-radius: 50%;
+                height: 80px;
+                width: 80px;
+                box-shadow: 0px 0px 6px 10px rgb(0 0 0 / 0.2);
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                border-radius: 50%;
+                margin-top: 1rem;
+                box-shadow: 0px 0px 6px 10px rgb(0 0 0 / 0.2);
+                top: 50%;
+                left: 50%;
+                transform-origin: 50% 47%;
+                transform: translate(-50%, -62%) scale(0.5);
+                pointer-events: none;
+                height: 120px;
+                width: 120px;
+            }
+        }
     }
 
     h1 {
@@ -32,5 +137,32 @@ body {
     p {
         color: #bbb;
         font-size: 1.1rem;
+    }
+}
+
+@keyframes circlesSmall {
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    70%,
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes circlesBig {
+    0%,
+    10% {
+        transform: translate(-50%, -62%) scale(0);
+        opacity: 1;
+    }
+
+    70%,
+    100% {
+        transform: translate(-50%, -62%) scale(1);
+        opacity: 0;
     }
 }
